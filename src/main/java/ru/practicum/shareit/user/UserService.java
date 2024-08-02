@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.Collection;
@@ -7,13 +8,15 @@ import java.util.Optional;
 
 public interface UserService {
 
-    Collection<User> getUsers();
+    Collection<UserDto> getUsers();
 
-    Optional<User> getUserById(Long id);
+    UserDto getUserDtoById(Long id);
 
-    User createUser(User user);
+    Optional<User> getUserById(Long userId);
 
-    User updateUser(User user);
+    UserDto createUser(UserDto userDto);
+
+    UserDto updateUser(Long userId, UserDto userDto);
 
     boolean deleteUser(Long id);
 }
