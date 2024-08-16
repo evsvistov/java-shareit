@@ -18,13 +18,17 @@ spring:
       mode: always
       schema-locations: classpath:schema.sql
 
-logging:
-  level:
-    org:
-      springframework:
-        orm.jpa: INFO
-        transaction: INFO
-        transaction.interceptor: TRACE
-        orm.jpa.JpaTransactionManager: DEBUG
+  logging:
+    level:
+      org:
+        springframework:
+          orm.jpa: INFO
+          transaction: INFO
+          transaction.interceptor: TRACE
+          orm.jpa.JpaTransactionManager: DEBUG
       #hibernate: DEBUG
       #jdbc: DEBUG
+
+  config:
+    activate:
+      on-profile: ci,test
