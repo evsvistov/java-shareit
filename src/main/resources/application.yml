@@ -28,7 +28,3 @@ spring:
           orm.jpa.JpaTransactionManager: DEBUG
       #hibernate: DEBUG
       #jdbc: DEBUG
-
-  config:
-    activate:
-      on-profile: ci,test
