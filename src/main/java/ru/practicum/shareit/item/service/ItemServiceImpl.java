@@ -1,18 +1,19 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.item.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.AccessDeniedException;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.UserService;
+import ru.practicum.shareit.item.repository.InMemoryItemRepository;
+import ru.practicum.shareit.user.service.UserService;
 import ru.practicum.shareit.user.model.User;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -30,9 +31,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Collection<ItemDto> getUserItems(Long userId) {
         log.info("Поиск вещей пользователя с id: {}", userId);
-        return itemRepository.findByOwnerId(userId).stream()
-                .map(ItemMapper::toItemDto)
-                .collect(Collectors.toList());
+        return null;
     }
 
     @Override
@@ -41,16 +40,14 @@ public class ItemServiceImpl implements ItemService {
         if (text == null || text.trim().isEmpty()) {
             return Collections.emptyList();
         }
-        return itemRepository.searchByText(text.toLowerCase()).stream()
-                .map(ItemMapper::toItemDto)
-                .collect(Collectors.toList());
+        return null;
     }
 
     @Override
     public ItemDto getItemById(Long itemId) {
         log.info("Поиск вещи с id: {}", itemId);
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Вещь не найдена"));
-        return ItemMapper.toItemDto(item);
+        return ItemMapper.toItemDto(item, null, null, null);
     }
 
     @Override
@@ -60,7 +57,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = ItemMapper.toItem(itemDto);
         item.setOwner(owner);
         Item createdItem = itemRepository.save(item);
-        return ItemMapper.toItemDto(createdItem);
+        return ItemMapper.toItemDto(createdItem, null, null, null);
     }
 
     @Override
@@ -83,6 +80,16 @@ public class ItemServiceImpl implements ItemService {
         }
 
         Item updatedItem = itemRepository.save(existingItem);
-        return ItemMapper.toItemDto(updatedItem);
+        return ItemMapper.toItemDto(updatedItem, null, null, null);
+    }
+
+    @Override
+    public List<CommentDto> getItemComments(Long itemId) {
+        return List.of();
+    }
+
+    @Override
+    public CommentDto addComment(Long userId, Long itemId, CommentDto commentDto) {
+        return null;
     }
 }
