@@ -54,7 +54,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto createItem(Long userId, ItemDto itemDto) {
         log.info("Добавление вещи пользователем с id: {}, вещь {}", userId, itemDto);
         User owner = userService.getUserById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        Item item = ItemMapper.toItem(itemDto);
+        Item item = ItemMapper.toItem(itemDto, null);
         item.setOwner(owner);
         Item createdItem = itemRepository.save(item);
         return ItemMapper.toItemDto(createdItem, null, null, null);

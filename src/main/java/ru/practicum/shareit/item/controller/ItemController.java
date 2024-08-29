@@ -28,8 +28,7 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<ItemDto> createItem(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                              @Valid
-                                              @RequestBody ItemDto itemDto) {
+                                              @Valid @RequestBody ItemDto itemDto) {
         ItemDto createdItem = itemService.createItem(userId, itemDto);
         return new ResponseEntity<>(createdItem, HttpStatus.OK);
     }
