@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.ItemRequestClient;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
 
 @RestController
 @RequestMapping(path = "/requests")
@@ -16,8 +17,8 @@ public class ItemRequestController {
 
     @PostMapping
     public ResponseEntity<Object> createRequest(@RequestHeader("X-Sharer-User-Id") long userId,
-                                                @Valid @RequestBody Long requestId) {
-        return itemRequestClient.createRequest(userId, requestId);
+                                                @Valid @RequestBody ItemRequestDto itemRequestDto) {
+        return itemRequestClient.createRequest(userId, itemRequestDto);
     }
 
     @GetMapping

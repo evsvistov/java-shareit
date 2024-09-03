@@ -1,3 +1,6 @@
+server:
+  port: 9090
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/shareit
@@ -10,7 +13,6 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
 
   sql:
@@ -18,13 +20,13 @@ spring:
       mode: always
       schema-locations: classpath:schema.sql
 
-  logging:
-    level:
-      org:
-        springframework:
-          orm.jpa: INFO
-          transaction: INFO
-          transaction.interceptor: TRACE
-          orm.jpa.JpaTransactionManager: DEBUG
-      #hibernate: DEBUG
-      #jdbc: DEBUG
+logging:
+  level:
+    org:
+      springframework:
+        orm.jpa: INFO
+        transaction: INFO
+        transaction.interceptor: TRACE
+        #orm.jpa.JpaTransactionManager: DEBUG
+        #hibernate: DEBUG
+        #jdbc: DEBUG

@@ -3,12 +3,14 @@ package ru.practicum.shareit.booking.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.AccessDeniedException;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.model.User;
@@ -33,27 +35,42 @@ public class BookingService {
     }
 
     @Transactional
-    public BookingDto createBooking(Long userId, BookingDto bookingDto) {
+    public BookingDto createBooking(Long userId, BookItemRequestDto bookItemRequestDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
 
-        Item item = itemRepository.findById(bookingDto.getItemId())
+        if (bookItemRequestDto.getItemId() == null) {
+            throw new IllegalArgumentException("Item ID cannot be null");
+        }
+
+        Item item = itemRepository.findById(bookItemRequestDto.getItemId())
                 .orElseThrow(() -> new NotFoundException("Вещь не найдена"));
 
         if (!item.isAvailable()) {
             throw new IllegalArgumentException("Вещь не доступна для бронирования");
         }
 
-        boolean hasOverlap = bookingRepository.existsByItemIdAndBookerIdAndEndIsBefore(item.getId(), userId, bookingDto.getEnd());
+        boolean hasOverlap = bookingRepository.existsByItemIdAndBookerIdAndEndIsBefore(item.getId(), userId, bookItemRequestDto.getEnd());
         if (hasOverlap) {
             throw new IllegalArgumentException("Уже существует бронирование на данное время");
         }
 
+        BookingDto bookingDto = new BookingDto();
+        bookingDto.setStart(bookItemRequestDto.getStart());
+        bookingDto.setEnd(bookItemRequestDto.getEnd());
+
+        ItemDto itemDto = new ItemDto();
+        itemDto.setId(item.getId());
+        itemDto.setName(item.getName());
+        itemDto.setDescription(item.getDescription());
+        itemDto.setAvailable(item.isAvailable());
+        bookingDto.setItem(itemDto);
+
         Booking booking = BookingMapper.toBooking(bookingDto, item, user);
-        booking.setBooker(user);
         booking.setStatus(Booking.BookingStatus.WAITING);
 
         Booking savedBooking = bookingRepository.save(booking);
+
         return BookingMapper.toBookingDto(savedBooking);
     }
 

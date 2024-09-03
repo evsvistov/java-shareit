@@ -40,7 +40,7 @@ public class ItemRequestMapper {
                 itemRequest.getDescription(),
                 itemRequest.getRequester().getId(),
                 itemRequest.getCreated(),
-                Collections.emptyList()
+                null
         );
     }
 }

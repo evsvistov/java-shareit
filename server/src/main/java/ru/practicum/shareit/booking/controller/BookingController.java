@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.service.BookingService;
 
@@ -22,8 +23,8 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<BookingDto> createBooking(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                    @RequestBody BookingDto bookingDto) {
-        BookingDto createdBooking = bookingService.createBooking(userId, bookingDto);
+                                                    @RequestBody BookItemRequestDto bookItemRequestDto) {
+        BookingDto createdBooking = bookingService.createBooking(userId, bookItemRequestDto);
         return new ResponseEntity<>(createdBooking, HttpStatus.CREATED);
     }
 

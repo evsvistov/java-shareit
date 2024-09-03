@@ -29,16 +29,18 @@ public class ItemRequestServiceImpl implements ItemRequestService {
 
     @Override
     @Transactional
-    public ItemRequestDto createItemRequest(Long userId, ItemRequestDto requestDto) {
+    public ItemRequestDto createItemRequest(Long userId, ItemRequestDto itemRequestDto) {
         User requester = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
 
-        ItemRequest itemRequest = ItemRequestMapper.toItemRequest(requestDto);
+        ItemRequest itemRequest = new ItemRequest();
+        itemRequest.setDescription(itemRequestDto.getDescription());
         itemRequest.setRequester(requester);
         itemRequest.setCreated(LocalDateTime.now());
 
         ItemRequest savedRequest = itemRequestRepository.save(itemRequest);
-        return ItemRequestMapper.toDto(savedRequest, List.of());
+        return ItemRequestMapper.toDto(savedRequest);
+
     }
 
     @Override
