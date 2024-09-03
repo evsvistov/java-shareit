@@ -25,7 +25,6 @@ import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,9 +66,7 @@ public class ItemDatabaseServiceImpl implements ItemService {
     @Override
     public Collection<ItemDto> searchItems(String text) {
         log.info("Поиск вещей по тексту: {}", text);
-        if (text == null || text.trim().isEmpty()) {
-            return Collections.emptyList();
-        }
+
         return itemRepository.searchByText(text.toUpperCase()).stream()
                 .map(item -> {
                     LocalDateTime lastBooking = getLastBookingEnd(item.getId());
@@ -98,17 +95,12 @@ public class ItemDatabaseServiceImpl implements ItemService {
     public ItemDto createItem(Long userId, ItemDto itemDto) {
         log.info("Добавление вещи пользователем с id: {}, вещь {}", userId, itemDto);
         User owner = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
-        if (itemDto.getName() == null || itemDto.getName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Название вещи не может быть пустым");
-        }
 
         ItemRequest itemRequest = null;
         if (itemDto.getRequestId() != null) {
             itemRequest = itemRequestRepository.findById(itemDto.getRequestId())
                     .orElseThrow(() -> new NotFoundException("Запрос на вещь не найден"));
         }
-
-
 
         Item item = ItemMapper.toItem(itemDto, itemRequest);
         item.setOwner(owner);

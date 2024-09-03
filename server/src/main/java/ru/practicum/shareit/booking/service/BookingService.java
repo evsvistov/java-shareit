@@ -39,10 +39,6 @@ public class BookingService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
 
-        if (bookItemRequestDto.getItemId() == null) {
-            throw new IllegalArgumentException("Item ID cannot be null");
-        }
-
         Item item = itemRepository.findById(bookItemRequestDto.getItemId())
                 .orElseThrow(() -> new NotFoundException("Вещь не найдена"));
 

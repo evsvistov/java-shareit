@@ -15,6 +15,7 @@ import ru.practicum.shareit.item.ItemClient;
 import ru.practicum.shareit.item.controller.ItemController;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.SearchRequestDto;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
@@ -119,12 +120,14 @@ class ItemControllerTest {
 
     @Test
     void searchItems() throws Exception {
-        when(itemClient.searchItems(anyLong(), anyString()))
+        SearchRequestDto searchRequestDto = new SearchRequestDto("test");
+
+        when(itemClient.searchItems(anyLong(), any(SearchRequestDto.class)))
                 .thenReturn(ResponseEntity.ok(Collections.singletonList(itemDto)));
 
         mvc.perform(get("/items/search")
                         .header("X-Sharer-User-Id", 1L)
-                        .param("text", "test")
+                        .param("text", searchRequestDto.getText())
                         .characterEncoding(StandardCharsets.UTF_8)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())

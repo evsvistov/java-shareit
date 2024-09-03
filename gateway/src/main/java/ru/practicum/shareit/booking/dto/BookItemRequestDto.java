@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookItemRequestDto {
-    @NotNull
+    @NotNull(message = "Идентификатор вещи не может быть пустым")
     private Long itemId;
     @FutureOrPresent
     private LocalDateTime start;

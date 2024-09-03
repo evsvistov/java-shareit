@@ -17,6 +17,7 @@ import ru.practicum.shareit.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,22 +50,28 @@ public class ItemRequestServiceImpl implements ItemRequestService {
                 .orElseThrow(() -> new NotFoundException("Пользователь не найден"));
 
         List<ItemRequest> requests = itemRequestRepository.findByRequesterIdOrderByCreatedDesc(userId);
+
+        List<Long> requestIds = requests.stream().map(ItemRequest::getId).collect(Collectors.toList());
+        List<Item> items = itemRequestRepository.findByRequestIds(requestIds);
+
+        Map<Long, List<Item>> itemsMap = items.stream().collect(Collectors.groupingBy(item -> item.getRequest().getId()));
+
         return requests.stream()
-                .map(request -> {
-                    List<Item> items = itemRepository.findByRequestId(request.getId());
-                    return ItemRequestMapper.toDto(request, items);
-                })
+                .map(request -> ItemRequestMapper.toDto(request, itemsMap.getOrDefault(request.getId(), List.of())))
                 .collect(Collectors.toList());
     }
 
     @Override
     public Collection<ItemRequestDto> getAllItemRequests(Long userId) {
         List<ItemRequest> requests = itemRequestRepository.findByRequesterIdNotOrderByCreatedDesc(userId);
+
+        List<Long> requestIds = requests.stream().map(ItemRequest::getId).collect(Collectors.toList());
+        List<Item> items = itemRequestRepository.findByRequestIds(requestIds);
+
+        Map<Long, List<Item>> itemsMap = items.stream().collect(Collectors.groupingBy(item -> item.getRequest().getId()));
+
         return requests.stream()
-                .map(request -> {
-                    List<Item> items = itemRepository.findByRequestId(request.getId());
-                    return ItemRequestMapper.toDto(request, items);
-                })
+                .map(request -> ItemRequestMapper.toDto(request, itemsMap.getOrDefault(request.getId(), List.of())))
                 .collect(Collectors.toList());
     }
 

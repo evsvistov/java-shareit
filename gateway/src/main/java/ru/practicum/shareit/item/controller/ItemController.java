@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.ItemClient;
 import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.SearchRequestDto;
 
 
 @RestController
@@ -41,8 +42,9 @@ public class ItemController {
 
     @GetMapping("/search")
     public ResponseEntity<Object> searchItems(@RequestHeader("X-Sharer-User-Id") long userId,
-                                              @RequestParam String text) {
-        return itemClient.searchItems(userId, text);
+                                              @Valid @RequestParam String text) {
+        SearchRequestDto searchRequestDto = new SearchRequestDto(text);
+        return itemClient.searchItems(userId, searchRequestDto);
     }
 
     @PostMapping("/{itemId}/comment")
