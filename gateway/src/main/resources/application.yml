@@ -1,0 +1,16 @@
+logging:
+  level:
+    org:
+      springframework:
+        orm.jpa: INFO
+        transaction: INFO
+        transaction.interceptor: TRACE
+        orm.jpa.JpaTransactionManager: DEBUG
+        #hibernate: DEBUG
+        #jdbc: DEBUG
+
+server:
+  port: 8080
+
+shareit-server:
+  url: http://localhost:9090
